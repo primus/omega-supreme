@@ -1,0 +1,19 @@
+{
+  "name": "omega-supreme",
+  "version": "0.0.0",
+  "description": "Known for his great strength and greater courage, Omega Supreme is the Autobots’ last line of defense against the Decepticons",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "primus",
+    "omega",
+    "supreme",
+    "autobots",
+    "scaling",
+    "http"
+  ],
+  "author": "Arnout Kazemier",
+  "license": "MIT"
+}
