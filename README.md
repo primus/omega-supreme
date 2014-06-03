@@ -12,7 +12,12 @@ a message with a single request and distribute messages to single sparks. In
 place of his left hand, he is armed with authentication which can pulverize any
 attacker.
 
-![Omega Supreme](https://raw.githubusercontent.com/primus/omega-supreme/master/logo.jpg)
+Or in plain English, `omega-supreme` allows you to broadcast messages to
+Primus using a regular HTTP request. These messages be broadcasted to every
+single connection on the server, a single spark or an array of sparks. This
+allows other languages to easily write messages to your server without the need
+creating a complex architecture. But that is not the only intention of this
+module. If you combine 
 
 ## Installation
 
@@ -43,3 +48,5 @@ server.listen(8080);
 ## License
 
 MIT
+
+![Omega Supreme](https://raw.githubusercontent.com/primus/omega-supreme/master/logo.jpg)
