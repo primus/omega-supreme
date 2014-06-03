@@ -12,6 +12,8 @@ a message with a single request and distribute messages to single sparks. In
 place of his left hand, he is armed with authentication which can pulverize any
 attacker.
 
+![Omega Supreme](https://raw.githubusercontent.com/primus/omega-supreme/master/logo.jpg)
+
 ## Installation
 
 ```js
