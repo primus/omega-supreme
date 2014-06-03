@@ -14,8 +14,6 @@
  * @api public
  */
 function omegasupreme(options) {
-  options = options || {};
-
   options.method = (options.method || 'PUT').toUpperCase();
   options.password = options.password || 'supreme';
   options.username = options.username || 'omega';
@@ -46,12 +44,9 @@ function omegasupreme(options) {
         break;
 
         case 'spark':
-          primus.forEach(function each(spark) {
-            if (spark.id !== data.id) return;
+          var spark = primus.spark(data.id);
 
-            spark.emit('incoming::data', data.msg);
-            return false;
-          });
+          if (spark) spark.emit('incoming::data', data.msg);
         break;
 
         case 'sparks':
@@ -77,7 +72,7 @@ function omegasupreme(options) {
    */
   function intercept(req, res, next) {
     if (!req.headers.authorization) return next();
-    if ('PUT' !== req.method) return next();
+    if (options.method !== req.method) return next();
 
     //
     // Handle unauthorized requests.
