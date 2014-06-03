@@ -24,6 +24,8 @@ function omegasupreme(options) {
   var primus = this;
 
   /**
+   * Parse the incoming so we can hand it off to the correct spark for further
+   * processing.
    *
    * @param {String} raw Raw text data.
    * @param {Response} res HTTP response.
@@ -31,7 +33,7 @@ function omegasupreme(options) {
    * @api private
    */
   function parse(raw, res, next) {
-    primus.decoder(raw, function decoded(err, data) {
+    primus.decoder.call(primus, raw, function decoded(err, data) {
       if (err) return next(err);
 
       res.statusCode = 200;

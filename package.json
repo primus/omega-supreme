@@ -15,5 +15,10 @@
     "http"
   ],
   "author": "Arnout Kazemier",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "assume": "0.0.2",
+    "mocha": "^1.20.0",
+    "pre-commit": "0.0.7"
+  }
 }
