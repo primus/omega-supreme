@@ -16,8 +16,7 @@ Or in plain English, `omega-supreme` allows you to broadcast messages to
 Primus using a regular HTTP request. These messages be broadcasted to every
 single connection on the server, a single spark or an array of sparks. This
 allows other languages to easily write messages to your server without the need
-creating a complex architecture. But that is not the only intention of this
-module. If you combine 
+creating a complex architecture.
 
 ## Installation
 
@@ -27,8 +26,8 @@ npm install --save omega-supreme
 
 ## Usage
 
-Omega Supreme should be added as **middleware** layer in Primus so it can
-intercept requests.
+Omega Supreme should be added as **plugin** in Primus. The plugin will also add
+a `omega-supreme` middleware which will intercept the incoming HTTP requests.
 
 ```js
 'use strict';
@@ -36,14 +35,21 @@ intercept requests.
 var Primus = require('primus')
   , server = require('http').createServer();
 
-var primus = new Primus(server);
+var primus = new Primus(server, {
+  /* Add the options here, in the Primus's options */
+});
 
-primus.before('omega-supreme', require('omega-supreme')({
-  password: 'your secret password'
-}));
+primus.use('omega-supreme', require('omega-supreme'));
 
 server.listen(8080);
 ```
+
+The following options are accepted:
+
+- **method**: HTTP method we should respond to, defaults to `PUT`.
+- **password**: Password for basic auth, defaults to `supreme`.
+- **username**: Username for basic auth, defaults to `omega`.
+- **url**: Access path, defaults to `/primus/omega/supreme`.
 
 ## License
 

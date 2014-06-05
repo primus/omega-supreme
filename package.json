@@ -22,5 +22,9 @@
     "pre-commit": "0.0.x",
     "primus": "2.2.x",
     "ws": "0.4.x"
+  },
+  "dependencies": {
+    "request": "2.36.x",
+    "routable": "0.0.x"
   }
 }
