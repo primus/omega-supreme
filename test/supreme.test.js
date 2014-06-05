@@ -27,4 +27,17 @@ describe('omega supreme', function () {
   it('is exposed as function', function () {
     assume(omega).to.be.a('function');
   });
+
+  it('exposes a plugin interface', function () {
+    assume(omega.server).to.be.a('function');
+    server.use('omega-supreme', omega);
+  });
+
+  describe('.broadcast', function () {
+    it('adds a .broadcast method', function () {
+      assume(server.broadcast).to.be.undefined();
+      server.use('omega-supreme', omega);
+      assume(server.broadcast).to.be.a('function');
+    });
+  });
 });
