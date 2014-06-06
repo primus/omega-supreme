@@ -3,6 +3,9 @@
 var request = require('request')
   , url = require('url').format;
 
+//
+// Expose the Primus plugin.
+//
 var supreme = module.exports;
 
 /**
@@ -93,8 +96,3 @@ supreme.server = function server(primus, options) {
     return primus;
   };
 };
-
-//
-// Expose the Primus plugin.
-//
-module.exports = supreme;
