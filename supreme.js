@@ -6,6 +6,28 @@ var request = require('request')
 var supreme = module.exports;
 
 /**
+ * Ensure that all default options have been set.
+ *
+ * @param {Object} options Supplied options.
+ * @returns {Object} options
+ * @api private
+ */
+supreme.options = function optional(options) {
+  //
+  // Options is provided by default by the Primus middleware but I'll rather be
+  // save then sorry here.
+  //
+  options = options || {};
+
+  options.method = 'method' in options ? options.method.toUpperCase() : 'PUT';
+  options.password = 'password' in options ? options.password : 'supreme';
+  options.username = 'username' in options ? options.username : 'omega';
+  options.url = 'url' in options ? options.url : '/primus/omega/supreme';
+
+  return options;
+};
+
+/**
  * Extend the Primus with additional methods which will do the actual
  * broadcasting.
  *
@@ -14,20 +36,24 @@ var supreme = module.exports;
  * @api public
  */
 supreme.server = function server(primus, options) {
+  options = supreme.options(options);
+
+  //
+  // Load the middleware so we can intercept messages.
+  //
   primus.before('omega-supreme', require('./omega')(options));
 
   /**
    * Forward a message to a given server
    *
    * @param {String} server A server address.
-   * @param {String} type Message type.
    * @param {Mixed} msg The messages to send.
    * @param {Mixed} sparks ids to send.
    * @param {Function} fn Callback.
    * @returns {Primus}
    * @api public
    */
-  primus.forward = function forward(server, type, msg, sparks, fn) {
+  primus.forward = function forward(server, msg, sparks, fn) {
     if ('function' === typeof sparks) {
       fn = sparks;
       sparks = '';
@@ -62,9 +88,17 @@ supreme.server = function server(primus, options) {
     if (!sparks.length) return fn();
 
     request({
-      method: options.method || 'PUT',
-      uri: url(server, options.url),
-      json: { type: type, msg: msg, ids: sparks }
+      method: options.method,               // Set the correct method.
+      uri: url(server, options.url),        // Compile the correct URL
+      json: {                               // The actual JSON payload
+        msg: msg,                           // - The message we write
+        sparks: sparks                      // - Who the message should receive
+      },                                    //
+      auth: {                               // Set authentication headers
+        user: options.username,             // With this user name.
+        pass: options.password,             // And password.
+        sendImmediately: true               // Send the header, don't wait for 401.
+      }
     }, function requested(err, response, body) {
       var status = (response || {}).statusCode
         , reason = (body || {}).reason;

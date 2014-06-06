@@ -18,17 +18,6 @@ var Route = require('routable');
  */
 module.exports = function omega(options) {
   //
-  // Options is provided by default by the Primus middleware but I'll rather be
-  // save then sorry here.
-  //
-  options = options || {};
-
-  options.method = 'method' in options ? options.method.toUpperCase() : 'PUT';
-  options.password = 'password' in options ? options.password : 'supreme';
-  options.username = 'username' in options ? options.username : 'omega';
-  options.url = 'url' in options ? options.url : '/primus/omega/supreme';
-
-  //
   // Compile an identical header as we expect to be send from the client so we
   // can easily validate the request.
   //
@@ -111,7 +100,6 @@ function parse(primus, raw, res, next) {
          err                              // No error..
       || 'object' !== typeof data         // Should be an object.
       || Array.isArray(data)              // A real object, not array.
-      || 'string' !== typeof data.type    // Type is used for filtering.
       || !data.msg                        // The data we send should be defined.
     ) {
       res.statusCode = 500;
@@ -119,36 +107,30 @@ function parse(primus, raw, res, next) {
       return res.end('{ "ok": false, "reason": "invalid data structure" }');
     }
 
-    switch (data.type) {
-      //
-      // Broadcast: send the message to every connected client in this Primus
-      // server.
-      //
-      case 'broadcast':
-        primus.forEach(function each(spark) {
-          spark.write(data.msg);
-        });
-      break;
-
-      //
-      // Spark: only send the message to the spark for the given id.
-      //
-      case 'spark':
-        var spark = primus.spark(data.id);
+    //
+    // Process the incoming messages in three different modes:
+    //
+    // Sparks: The data.sparks is an array with spark id's which we should write
+    //         the data to.
+    // Spark:  The data.sparks is the id of one single individual spark which
+    //         should receive the data.
+    // All:    Broadcast the message to every single connected spark if no
+    //         `data.sparks` has been provided.
+    //
+    if (Array.isArray(data.sparks)) {
+      data.sparks.forEach(function each(id) {
+        var spark = primus.spark(id);
 
         if (spark) spark.write(data.msg);
-      break;
+      });
+    } else if ('string' === typeof data.sparks && data.sparks) {
+      var spark = primus.spark(data.sparks);
 
-      //
-      // Sparks: send the message to all of our supplied spark ids.
-      //
-      case 'sparks':
-        data.ids.forEach(function each(id) {
-          var spark = primus.spark(id);
-
-          if (spark) spark.write(data.msg);
-        });
-      break;
+      if (spark) spark.write(data.msg);
+    } else {
+      primus.forEach(function each(spark) {
+        spark.write(data.msg);
+      });
     }
 
     res.statusCode = 200;
