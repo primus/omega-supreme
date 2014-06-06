@@ -39,7 +39,7 @@ supreme.server = function server(primus, options) {
       sparks = sparks.filter(function (id) {
         spark = primus.spark(id);
 
-        if (spark) spark.emit('incoming::data', msg);
+        if (spark) spark.write(msg);
 
         return !spark;
       });
@@ -47,12 +47,12 @@ supreme.server = function server(primus, options) {
       spark = primus.spark(sparks);
 
       if (spark) {
-        spark.emit('incoming::data', msg);
+        spark.write(msg);
         sparks.length = '';
       }
     } else {
       primus.forEach(function each(spark) {
-        spark.emit('incoming::data', msg);
+        spark.write(msg);
       });
     }
 

@@ -116,7 +116,7 @@ function parse(primus, raw, res, next) {
     ) {
       res.statusCode = 500;
       res.setHeader('Content-Type', 'application/json');
-      return res.end('{ "ok": false }');
+      return res.end('{ "ok": false, "reason": "invalid data structure" }');
     }
 
     switch (data.type) {
@@ -126,7 +126,7 @@ function parse(primus, raw, res, next) {
       //
       case 'broadcast':
         primus.forEach(function each(spark) {
-          spark.emit('incoming::data', data.msg);
+          spark.write(data.msg);
         });
       break;
 
@@ -136,7 +136,7 @@ function parse(primus, raw, res, next) {
       case 'spark':
         var spark = primus.spark(data.id);
 
-        if (spark) spark.emit('incoming::data', data.msg);
+        if (spark) spark.write(data.msg);
       break;
 
       //
@@ -146,7 +146,7 @@ function parse(primus, raw, res, next) {
         data.ids.forEach(function each(id) {
           var spark = primus.spark(id);
 
-          if (spark) spark.emit('incoming::data', data.msg);
+          if (spark) spark.write(data.msg);
         });
       break;
     }
