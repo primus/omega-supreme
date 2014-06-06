@@ -17,7 +17,7 @@ supreme.server = function server(primus, options) {
   primus.before('omega-supreme', require('./omega')(options));
 
   /**
-   * Broadcast a message to a given server
+   * Forward a message to a given server
    *
    * @param {String} server A server address.
    * @param {String} type Message type.
@@ -27,31 +27,66 @@ supreme.server = function server(primus, options) {
    * @returns {Primus}
    * @api public
    */
-  primus.broadcast = function broadcast(server, type, msg, sparks, fn) {
+  primus.forward = function forward(server, type, msg, sparks, fn) {
     if ('function' === typeof sparks) {
       fn = sparks;
-      sparks = undefined;
+      sparks = '';
     }
+
+    var spark;
+
+    if (Array.isArray(sparks)) {
+      sparks = sparks.filter(function (id) {
+        spark = primus.spark(id);
+
+        if (spark) spark.emit('incoming::data', msg);
+
+        return !spark;
+      });
+    } else if (sparks) {
+      spark = primus.spark(sparks);
+
+      if (spark) {
+        spark.emit('incoming::data', msg);
+        sparks.length = '';
+      }
+    } else {
+      primus.forEach(function each(spark) {
+        spark.emit('incoming::data', msg);
+      });
+    }
+
+    //
+    // Everything was broad casted locally, we can bail out early
+    //
+    if (!sparks.length) return fn();
 
     request({
       method: options.method || 'PUT',
       uri: url(server, options.url),
       json: { type: type, msg: msg, ids: sparks }
     }, function requested(err, response, body) {
-      var status = (response || {}).statusCode;
+      var status = (response || {}).statusCode
+        , reason = (body || {}).reason;
 
-      if (err || status !== 200) {
-        err = err || new Error('Invalid status code ('+ status +') returned');
+      //
+      // Handle errors that are produced by our own library.
+      //
+      if (!err) {
+        if (200 !== status) {
+          err = new Error(reason || 'Invalid status code ('+ status +') returned');
+        } else if (!body.ok) {
+          err = new Error(reason || 'Unable to process the request');
+        }
+      }
+
+      if (err) {
         err.status = status;
         err.body = body;
 
         return fn(err);
       }
 
-      //
-      // We only have successfully send the message when we received
-      // a statusCode 200 from the targeted server.
-      //
       fn(undefined, body);
     });
 

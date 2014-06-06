@@ -33,11 +33,11 @@ describe('omega supreme', function () {
     server.use('omega-supreme', omega);
   });
 
-  describe('.broadcast', function () {
-    it('adds a .broadcast method', function () {
-      assume(server.broadcast).to.be.undefined();
+  describe('.forward', function () {
+    it('adds a .forward method', function () {
+      assume(server.forward).to.be.undefined();
       server.use('omega-supreme', omega);
-      assume(server.broadcast).to.be.a('function');
+      assume(server.forward).to.be.a('function');
     });
   });
 });
