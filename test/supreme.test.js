@@ -120,6 +120,40 @@ describe('omega supreme', function () {
       });
     });
 
+    it('merges local and server send counts', function (next) {
+      server.use('omega', omega);
+      server2.use('omega', omega);
+
+      var connections = [
+        server.Socket(http2.url), server2.Socket(http2.url),
+        server.Socket(http2.url), server2.Socket(http2.url),
+        server.Socket(http2.url), server2.Socket(http2.url),
+        server.Socket(http2.url), server2.Socket(http2.url),
+        server.Socket(http2.url), server2.Socket(http2.url),
+        server.Socket(http2.url), server2.Socket(http2.url),
+        server.Socket(http2.url), server2.Socket(http2.url)
+      ];
+
+      async.each(connections, function (client, next) {
+        client.on('open', next);
+      }, function (err) {
+        if (err) return next(err);
+
+        async.each(connections, function (client, next) {
+          client.on('data', function (msg) {
+            assume(msg).to.equal('bar');
+            next();
+          });
+        }, next);
+
+        server.forward(http2.url, 'bar', function (err, data) {
+          if (err) return next(err);
+
+          assume(data.send).to.equal(connections.length);
+        });
+      });
+    });
+
     it('sends the data to one connected client', function (next) {
       server.use('omega', omega);
       server2.use('omega', omega);
@@ -138,7 +172,7 @@ describe('omega supreme', function () {
       });
     });
 
-    it('broadcasts if no spark id is provided', function () {
+    it('broadcasts if no spark id is provided', function (next) {
       server.use('omega', omega);
       server2.use('omega', omega);
 
@@ -150,7 +184,7 @@ describe('omega supreme', function () {
         server2.Socket(http2.url), server2.Socket(http2.url),
         server2.Socket(http2.url), server2.Socket(http2.url),
         server2.Socket(http2.url), server2.Socket(http2.url)
-      ];
+      ], donish = 1;
 
       async.each(connections, function (client, next) {
         client.on('open', next);
@@ -164,10 +198,10 @@ describe('omega supreme', function () {
           });
         }, next);
 
-        server.forward(http2, 'bar', function (err, data) {
+        server.forward(http2.url, 'bar', function (err, data) {
           if (err) return next(err);
 
-          assume(data.calls).to.equal(connections.length);
+          assume(data.send).to.equal(connections.length);
         });
       });
     });
