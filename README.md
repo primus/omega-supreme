@@ -1,4 +1,4 @@
-# Omega Supreme
+# Omega Supreme [![Build Status](https://travis-ci.org/primus/omega-supreme.svg)](https://travis-ci.org/primus/omega-supreme)
 
 Known for his great strength and greater courage, Omega Supreme is the Autobots’
 last line of defense against the Decepticons. He will stand unwaveringly against
