@@ -18,6 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "assume": "0.0.x",
+    "async": "^0.9.0",
     "mocha": "1.20.x",
     "pre-commit": "0.0.x",
     "primus": "2.2.x",

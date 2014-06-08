@@ -40,7 +40,7 @@ module.exports = function omega(options) {
    */
   function intercept(req, res, next) {
     if (
-         route.test(req.url)            // Incorrect URL.
+         !route.test(req.url)           // Incorrect URL.
       || !req.headers.authorization     // Missing authorization.
       || options.method !== req.method  // Invalid method.
     ) return next();
@@ -107,6 +107,8 @@ function parse(primus, raw, res, next) {
       return res.end('{ "ok": false, "reason": "invalid data structure" }');
     }
 
+    var called = 0;
+
     //
     // Process the incoming messages in three different modes:
     //
@@ -121,20 +123,27 @@ function parse(primus, raw, res, next) {
       data.sparks.forEach(function each(id) {
         var spark = primus.spark(id);
 
-        if (spark) spark.write(data.msg);
+        if (spark) {
+          spark.write(data.msg);
+          called++;
+        }
       });
     } else if ('string' === typeof data.sparks && data.sparks) {
       var spark = primus.spark(data.sparks);
 
-      if (spark) spark.write(data.msg);
+      if (spark) {
+        spark.write(data.msg);
+        called++;
+      }
     } else {
       primus.forEach(function each(spark) {
         spark.write(data.msg);
+        called++;
       });
     }
 
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.end('{ "ok": true }');
+    res.end('{ "ok": true, "send":'+ called +' }');
   });
 }

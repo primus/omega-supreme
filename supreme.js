@@ -1,7 +1,7 @@
 'use strict';
 
 var request = require('request')
-  , url = require('url').format;
+  , url = require('url').resolve;
 
 //
 // Expose the Primus plugin.

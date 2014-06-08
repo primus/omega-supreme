@@ -3,6 +3,7 @@ describe('omega supreme', function () {
 
   var assume = require('assume')
     , Primus = require('primus')
+    , async = require('async')
     , omega = require('../');
 
   var port = 1024
@@ -25,6 +26,9 @@ describe('omega supreme', function () {
 
     http.port = port++;
     http2.port = port++;
+
+    http.url = 'http://localhost:'+ http.port;
+    http2.url = 'http://localhost:'+ http2.port;
 
     http.listen(http.port, function () {
       http2.listen(http2.port, next);
@@ -71,6 +75,85 @@ describe('omega supreme', function () {
       assume(server.forward).to.be.undefined();
       server.use('omega-supreme', omega);
       assume(server.forward).to.be.a('function');
+    });
+
+    it('returns the count of sparks matching (which is 0)', function (next) {
+      server.use('omega', omega);
+      server2.use('omega', omega);
+
+      server.forward(http2.url, 'foo', 'unkown', function (err, data) {
+        if (err) return next(err);
+
+        assume(data.send).to.equal(0);
+        next();
+      });
+    });
+
+    it('returns the count of sparks matching (which is 1)', function (next) {
+      server.use('omega', omega);
+      server2.use('omega', omega);
+
+      var client = server2.Socket(http2.url);
+      client.id(function get(id) {
+        server.forward(http2.url, 'foo', id, function (err, data) {
+          if (err) return next(err);
+
+          assume(data.send).to.equal(1);
+          next();
+        });
+      });
+    });
+
+    it('sends the data to one connected client', function (next) {
+      server.use('omega', omega);
+      server2.use('omega', omega);
+
+      var client = server2.Socket(http2.url);
+
+      client.id(function get(id) {
+        server.forward(http2.url, 'foo', id, function (err, data) {
+          if (err) return next(err);
+        });
+      });
+
+      client.on('data', function (msg) {
+        assume(msg).to.equal('foo');
+        next();
+      });
+    });
+
+    it('broadcasts if no spark id is provided', function () {
+      server.use('omega', omega);
+      server2.use('omega', omega);
+
+      var connections = [
+        server2.Socket(http2.url), server2.Socket(http2.url),
+        server2.Socket(http2.url), server2.Socket(http2.url),
+        server2.Socket(http2.url), server2.Socket(http2.url),
+        server2.Socket(http2.url), server2.Socket(http2.url),
+        server2.Socket(http2.url), server2.Socket(http2.url),
+        server2.Socket(http2.url), server2.Socket(http2.url),
+        server2.Socket(http2.url), server2.Socket(http2.url)
+      ];
+
+      async.each(connections, function (client, next) {
+        client.on('open', next);
+      }, function (err) {
+        if (err) return next(err);
+
+        async.each(connections, function (client, next) {
+          client.on('data', function (msg) {
+            assume(msg).to.equal('bar');
+            next();
+          });
+        }, next);
+
+        server.forward(http2, 'bar', function (err, data) {
+          if (err) return next(err);
+
+          assume(data.calls).to.equal(connections.length);
+        });
+      });
     });
   });
 });
