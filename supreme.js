@@ -57,13 +57,14 @@ supreme.server = function server(primus, options) {
    * @api public
    */
   primus.forward = function forward(server, msg, sparks, fn) {
+    var broadcast = false
+      , calls = 0
+      , spark;
+
     if ('function' === typeof sparks) {
       fn = sparks;
       sparks = '';
     }
-
-    var calls = 0
-      , spark;
 
     if (Array.isArray(sparks)) {
       sparks = sparks.filter(function (id) {
@@ -89,12 +90,14 @@ supreme.server = function server(primus, options) {
         spark.write(msg);
         calls++;
       });
+
+      broadcast = true;
     }
 
     //
     // Everything was broad casted locally, we can bail out early
     //
-    if (!sparks.length) return fn(undefined, {
+    if (!broadcast && !sparks.length) return fn(undefined, {
       ok: true,
       send: calls,
       local: true
