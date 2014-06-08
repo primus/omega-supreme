@@ -104,6 +104,22 @@ describe('omega supreme', function () {
       });
     });
 
+    it('does not request server if sparks are all local', function (next) {
+      server2.use('omega', omega);
+
+      var client = server2.Socket(http2.url);
+      client.id(function get(id) {
+        server2.forward(http2.url, 'foo', id, function (err, data) {
+          if (err) return next(err);
+
+          assume(data.send).to.equal(1);
+          assume(data.local).to.equal(true);
+
+          next();
+        });
+      });
+    });
+
     it('sends the data to one connected client', function (next) {
       server.use('omega', omega);
       server2.use('omega', omega);

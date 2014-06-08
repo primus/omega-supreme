@@ -62,13 +62,17 @@ supreme.server = function server(primus, options) {
       sparks = '';
     }
 
-    var spark;
+    var calls = 0
+      , spark;
 
     if (Array.isArray(sparks)) {
       sparks = sparks.filter(function (id) {
         spark = primus.spark(id);
 
-        if (spark) spark.write(msg);
+        if (spark) {
+          spark.write(msg);
+          calls++;
+        }
 
         return !spark;
       });
@@ -78,17 +82,23 @@ supreme.server = function server(primus, options) {
       if (spark) {
         spark.write(msg);
         sparks = '';
+        calls++;
       }
     } else {
       primus.forEach(function each(spark) {
         spark.write(msg);
+        calls++;
       });
     }
 
     //
     // Everything was broad casted locally, we can bail out early
     //
-    if (!sparks.length) return fn();
+    if (!sparks.length) return fn(undefined, {
+      ok: true,
+      send: calls,
+      local: true
+    });
 
     request({
       method: options.method,               // Set the correct method.
@@ -122,6 +132,14 @@ supreme.server = function server(primus, options) {
         err.body = body;
 
         return fn(err);
+      }
+
+      //
+      // We did local broadcasting AND broadcasting on the other server, so
+      // we're going to correct the `send` property with our own local count.
+      //
+      if (calls && body.send) {
+        body.send = calls + body.send;
       }
 
       fn(undefined, body);
