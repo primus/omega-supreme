@@ -77,7 +77,7 @@ supreme.server = function server(primus, options) {
 
       if (spark) {
         spark.write(msg);
-        sparks.length = '';
+        sparks = '';
       }
     } else {
       primus.forEach(function each(spark) {
