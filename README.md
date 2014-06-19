@@ -108,8 +108,8 @@ the supplied sparks are not on the current server.
 Sending a message to a spark on a different server:
 
 ```js
-primus.forward('http://localhost:8080', { 
-  event: 'name' 
+primus.forward('http://localhost:8080', {
+  event: 'name'
 }, 'ad8a-280z-18', function (err, data) {
   // data.calls = 1 if it was successful.
 });
@@ -118,8 +118,8 @@ primus.forward('http://localhost:8080', {
 Sending to a group of sparks:
 
 ```js
-primus.forward('http://localhost:8080', { 
-  event: 'name' 
+primus.forward('http://localhost:8080', {
+  event: 'name'
 }, ['ad8a-280z-18', 'y97x-42480-13', /* more spark.id's */ ], function (err, data) {
 
 });
@@ -128,8 +128,8 @@ primus.forward('http://localhost:8080', {
 Or just broadcasting by not supplying the optional sparks argument:
 
 ```js
-primus.forward('http://localhost:8080', { 
-  event: 'name' 
+primus.forward('http://localhost:8080', {
+  event: 'name'
 }, function (err, data) {
 
 });
