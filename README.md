@@ -58,6 +58,7 @@ broadcast information. The following options can be configured:
 - **password**: Password for basic auth, defaults to `supreme`.
 - **username**: Username for basic auth, defaults to `omega`.
 - **url**: Access path, defaults to `/primus/omega/supreme`.
+- **concurrently**: How many servers can we broadcast to at once, defaults to `10`.
 
 ### Messaging
 
@@ -71,7 +72,7 @@ assumptions to the data that is send to the server:
 - The `msg` Property contains the data that needs to be send to the connections.
 - The `sparks` Property can be an array of spark ids or a string which is the
   spark id. If no `sparks` property is supplied we assume that the given message
-  needs to be broadcasted to every single connection on this server.
+  needs to be broadcast to every single connection on this server.
 
 When your message has been successfully processed by the server it returns a
 JSON object with some information:
