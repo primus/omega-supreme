@@ -57,7 +57,7 @@ supreme.server = function server(primus, options) {
    * @api public
    */
   primus.forward = function forward(server, msg, sparks, fn) {
-    var broadcast = false
+    var type = 'broadcast'
       , calls = 0
       , spark;
 
@@ -77,6 +77,8 @@ supreme.server = function server(primus, options) {
 
         return !spark;
       });
+
+      type = 'sparks';
     } else if (sparks) {
       spark = primus.spark(sparks);
 
@@ -85,19 +87,19 @@ supreme.server = function server(primus, options) {
         sparks = '';
         calls++;
       }
+
+      type = 'spark';
     } else {
       primus.forEach(function each(spark) {
         spark.write(msg);
         calls++;
       });
-
-      broadcast = true;
     }
 
     //
     // Everything was broad casted locally, we can bail out early
     //
-    if (!broadcast && !sparks.length) return fn(undefined, {
+    if (type !== 'broadcast' && !sparks.length) return fn(undefined, {
       ok: true,
       send: calls,
       local: true
@@ -116,8 +118,11 @@ supreme.server = function server(primus, options) {
         sendImmediately: true               // Send the header, don't wait for 401.
       }
     }, function requested(err, response, body) {
-      var status = (response || {}).statusCode
-        , reason = (body || {}).reason;
+      response = response || {};
+      body = body || {};
+
+      var status = response.statusCode
+        , reason = body.reason;
 
       //
       // Handle errors that are produced by our own library.
@@ -125,14 +130,20 @@ supreme.server = function server(primus, options) {
       if (!err) {
         if (200 !== status) {
           err = new Error(reason || 'Invalid status code ('+ status +') returned');
-        } else if (!body.ok) {
+        } else if (body.ok !== true) {
           err = new Error(reason || 'Unable to process the request');
         }
       }
 
       if (err) {
-        err.status = status;
-        err.body = body;
+        err.url = url(server, options.url);
+        err.status = status || 500;
+        err.body = body || '';
+        err.type = type;
+        err.packet = {
+          sparks: sparks,
+          msg: msg
+        };
 
         return fn(err);
       }
