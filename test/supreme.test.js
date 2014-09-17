@@ -172,6 +172,23 @@ describe('omega supreme', function () {
       });
     });
 
+    it('does not error when given an empty url', function (next) {
+      server.use('omega', omega);
+      server2.use('omega', omega);
+
+      var client = server2.Socket(http2.url);
+
+      client.id(function get(id) {
+        server.forward(null, 'foo', id, function (err, data) {
+          assume(err.message).to.equal('No servers availabls for sparks');
+          assume(data.send).to.equal(0);
+          assume(data.ok).to.be.false;
+          next();
+        });
+      });
+
+    });
+
     it('broadcasts if no spark id is provided', function (next) {
       server.use('omega', omega);
       server2.use('omega', omega);

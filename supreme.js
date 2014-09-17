@@ -115,6 +115,13 @@ supreme.server = function server(primus, options) {
       local: true
     });
 
+    servers = servers.filter(function(server){
+      return server;
+    });
+    if (servers.length == 0){
+      var err = new Error("No servers availabls for sparks");
+      return fn(err, {ok: false, send: calls, local: false});
+    }
     async.mapLimit(servers, options.concurrently, function contact(server, next) {
       request({
         method: options.method,               // Set the correct method.
