@@ -1,6 +1,6 @@
 {
   "name": "omega-supreme",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Known for his great strength and greater courage, Omega Supreme is the Autobots’ last line of defense against the Decepticons",
   "main": "index.js",
   "scripts": {
@@ -19,14 +19,14 @@
   "devDependencies": {
     "assume": "0.0.x",
     "async": "0.9.x",
-    "mocha": "1.20.x",
+    "mocha": "1.21.x",
     "pre-commit": "0.0.x",
-    "primus": "2.2.x",
+    "primus": "2.4.x",
     "ws": "0.4.x"
   },
   "dependencies": {
     "async": "0.9.x",
-    "request": "2.36.x",
+    "request": "2.42.x",
     "routable": "0.0.x"
   }
 }
