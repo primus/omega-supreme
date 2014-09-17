@@ -180,9 +180,9 @@ describe('omega supreme', function () {
 
       client.id(function get(id) {
         server.forward(null, 'foo', id, function (err, data) {
-          assume(err.message).to.equal('No servers availabls for sparks');
+          assume(err.message).to.equal('No servers provided');
           assume(data.send).to.equal(0);
-          assume(data.ok).to.be.false;
+          assume(data.ok).to.be.false();
           next();
         });
       });
