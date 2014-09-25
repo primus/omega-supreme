@@ -58,8 +58,8 @@ The user name and password are used to authenticate the HTTP requests with the
 broadcast information. The following options can be configured:
 
 - **method**: HTTP method we should respond to, defaults to `PUT`.
-- **password**: Password for basic auth, defaults to `supreme`.
-- **username**: Username for basic auth, defaults to `omega`.
+- **password**: Password for basic authorization, defaults to `supreme`.
+- **username**: Username for basic authorization, defaults to `omega`.
 - **url**: Access path, defaults to `/primus/omega/supreme`.
 - **concurrently**: How many servers can we broadcast to at once, defaults to `10`.
 
@@ -138,6 +138,17 @@ primus.forward('http://localhost:8080', {
 
 });
 ```
+
+In all these examples above, we've been sending a `event` packet. This is the
+event format that the [emit](https://github.com/primus/emit) plugin supports. If
+you're using `primus-emitter` instead you can also emit:
+
+```js
+primus.forward('http://localhost:8080', { emit: [ eventType, msg ] }, fn);
+```
+
+To trigger events. But you don't have to write event blobs, you can write
+anything you want.
 
 ## License
 
