@@ -10,16 +10,16 @@ insight to actually relish the importance of his task – Omega knows that if he
 falls, it is unlikely there will be any remaining Autobots to take his place,
 but he would not have it any other way.
 
-In Primus mode, Omega Supreme has incredible configurablity, able to broadcast
-a message with a single request and distribute messages to single sparks. In
-place of his left hand, he is armed with authentication which can pulverize any
-attacker.
+In Primus mode, Omega Supreme has an incredible configurability, is able to
+broadcast a message with a single request and can distribute messages to single
+sparks. In place of his left hand, he is armed with authentication which can
+pulverize any attacker.
 
 Or in plain English, `omega-supreme` allows you to broadcast messages to
-Primus using a regular HTTP request. These messages be broadcasted to every
+Primus using a regular HTTP request. These messages can be broadcasted to every
 single connection on the server, a single spark or an array of sparks. This
 allows other languages to easily write messages to your server without the need
-creating a complex architecture.
+of creating a complex architecture.
 
 ## Installation
 
@@ -29,12 +29,12 @@ npm install --save omega-supreme
 
 ## Adding Omega Supreme to Primus
 
-Omega Supreme should be added as **plugin** in Primus. The plugin will also add
+Omega Supreme should be added as a **plugin** in Primus. The plugin will also add
 a `omega-supreme` middleware which will intercept the incoming HTTP requests and
-to the actual distribution of the message to every single connected client.
-Adding plugins in Primus is done using the `.use(name, plugin)` method. The
+will take care of the actual distribution of the message to every single connected
+client. Adding plugins in Primus is done using the `.use(name, plugin)` method. The
 options for the plugin can directly be added to the constructor of your Primus
-server so all the configuration of the server and plugins is in one central
+server so all the configuration of the server and the plugins is in one central
 location as illustrated in the example below:
 
 ```js
@@ -52,10 +52,10 @@ primus.use('omega-supreme', require('omega-supreme'));
 server.listen(8080);
 ```
 
-There are various of options available, there are all optional but we highly
+There are various options available, they are all optional but we highly
 recommend to change the `password` and `username` options to something unique.
-The user name and password are used to authenticate the HTTP requests with the
-broadcast information. The following options can be configured:
+User name and password are used to authenticate the HTTP requests containing the
+information to bradcast. The following options can be configured:
 
 - **method**: HTTP method we should respond to, defaults to `PUT`.
 - **password**: Password for basic authorization, defaults to `supreme`.
@@ -66,16 +66,16 @@ broadcast information. The following options can be configured:
 ### Messaging
 
 Now that you've added the `omega-supreme` plugin to your Primus server you can
-communicate/broadcast using plain HTTP requests with it. We make a couple
-assumptions to the data that is send to the server:
+communicate/broadcast with it using plain HTTP requests. We make a couple
+assumptions to the data that is sent to the server:
 
 - The POST/PUT data is JSON encoded.
 - The request is made against the supplied URL option.
 - The request uses Basic Authentication with the supplied username and password.
-- The `msg` Property contains the data that needs to be send to the connections.
+- The `msg` Property contains the data that needs to be sent to the connections.
 - The `sparks` Property can be an array of spark ids or a string which is the
   spark id. If no `sparks` property is supplied we assume that the given message
-  needs to be broadcast to every single connection on this server.
+  needs to be broadcasted to every single connection on this server.
 
 When your message has been successfully processed by the server it returns a
 JSON object with some information:
@@ -88,7 +88,7 @@ JSON object with some information:
 ```
 
 The `send` property indicates the amount of connections we've written the
-message payload to.  If your request has failed a 500 or 401 status code will be
+message payload to. If your request has failed a 500 or 401 status code will be
 set and a slightly different JSON object will be returned:
 
 ```js
@@ -104,10 +104,10 @@ set and a slightly different JSON object will be returned:
 primus.forward(server, msg, [sparks], fn);
 ```
 
-In order to make the messaging even easier to use we've added a `primus.forward`
-method to your Primus server instance. It allows you to broadcast messages to
-the supplied server. It will only write the message to the supplied server if
-the supplied sparks are not on the current server.
+In order to make the messaging even easier to use, `omega-supreme` adds a
+`primus.forward` method to your Primus server instance. It allows you to broadcast
+messages to the supplied server. It will only write the message to the supplied
+server if the supplied sparks are not on the current server.
 
 Sending a message to a spark on a different server:
 
@@ -139,16 +139,17 @@ primus.forward('http://localhost:8080', {
 });
 ```
 
-In all these examples above, we've been sending a `event` packet. This is the
-event format that the [emit](https://github.com/primus/emit) plugin supports. If
-you're using `primus-emitter` instead you can also emit:
+In all the examples above, we've sent an `event` packet. This is the event format
+that the [emit](https://github.com/primus/emit) plugin supports. If you're using
+`primus-emitter` instead, and you want to trigger events you should use this
+format:
 
 ```js
 primus.forward('http://localhost:8080', { emit: [ eventType, msg ] }, fn);
 ```
 
-To trigger events. But you don't have to write event blobs, you can write
-anything you want.
+Keep in mind that you don't have to write event blobs, you can write anything
+you want.
 
 ## License
 
