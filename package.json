@@ -6,6 +6,10 @@
   "scripts": {
     "test": "mocha $(find test -name '*.test.js')"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primus/omega-supreme"
+  },
   "keywords": [
     "primus",
     "omega",
@@ -16,17 +20,20 @@
   ],
   "author": "Arnout Kazemier",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/primus/omega-supreme/issues"
+  },
+  "homepage": "https://github.com/primus/omega-supreme",
+  "dependencies": {
+    "async": "0.9.x",
+    "request": "2.45.x",
+    "routable": "0.0.x"
+  },
   "devDependencies": {
     "assume": "0.0.x",
-    "async": "0.9.x",
     "mocha": "1.21.x",
     "pre-commit": "0.0.x",
     "primus": "2.4.x",
     "ws": "0.4.x"
-  },
-  "dependencies": {
-    "async": "0.9.x",
-    "request": "2.42.x",
-    "routable": "0.0.x"
   }
 }
