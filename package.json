@@ -4,7 +4,9 @@
   "description": "Known for his great strength and greater courage, Omega Supreme is the Autobots’ last line of defense against the Decepticons",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec test.js"
+    "coverage": "istanbul cover node_modules/.bin/_mocha -- --reporter spec test.js",
+    "test": "mocha --reporter spec test.js",
+    "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- --reporter spec test.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
   },
   "devDependencies": {
     "assume": "0.0.x",
+    "istanbul": "0.3.x",
     "mocha": "1.21.x",
     "pre-commit": "0.0.x",
     "primus": "2.4.x",

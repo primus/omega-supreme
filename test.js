@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 describe('omega supreme', function () {
   'use strict';
 
