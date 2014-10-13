@@ -4,7 +4,7 @@ describe('omega supreme', function () {
   var assume = require('assume')
     , Primus = require('primus')
     , async = require('async')
-    , omega = require('../');
+    , omega = require('./');
 
   var port = 1024
     , server2
