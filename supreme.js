@@ -155,7 +155,7 @@ supreme.server = function server(primus, options) {
         if (err) {
           err.url = url(server, options.url);
           err.status = status || 500;
-          err.body = body || '';
+          err.body = body;
           err.type = type;
           err.packet = {
             sparks: sparks,
