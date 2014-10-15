@@ -368,13 +368,27 @@ describe('omega supreme', function () {
       });
     });
 
-    it('receives an error when forwarding an undefined message', function (next) {
+    it('receives an error when the request is not successful', function (next) {
+      primus2.options.url = '/primus/supreme/omega';
+      primus2.use('omega', omega);
+      primus.use('omega', omega);
+
+      primus.forward(server2.url, 'foo', function (err) {
+        assume(err).to.be.instanceOf(Error);
+        assume(err.status).to.equal(426);
+        assume(err.message).to.contain('Invalid status code');
+        next();
+      });
+    });
+
+    it('receives an error when the response body is malformed', function (next) {
+      primus.options.url = '/primus/spec';
       primus.use('omega', omega);
       primus2.use('omega', omega);
 
-      primus.forward(server2.url, undefined, function (err) {
+      primus.forward(server2.url, 'foo', function (err) {
         assume(err).to.be.instanceOf(Error);
-        assume(err.message).to.equal('invalid data structure');
+        assume(err.message).to.equal('Unable to process the request');
         next();
       });
     });
