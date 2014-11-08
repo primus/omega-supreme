@@ -1,8 +1,6 @@
 # Omega Supreme
 
-[![Build Status](https://travis-ci.org/primus/omega-supreme.svg)](https://travis-ci.org/primus/omega-supreme)
-[![NPM version](https://badge.fury.io/js/omega-supreme.svg)](http://badge.fury.io/js/omega-supreme)
-[![Coverage Status](https://img.shields.io/coveralls/primus/omega-supreme.svg)](https://coveralls.io/r/primus/omega-supreme?branch=master)
+[![Version npm](http://img.shields.io/npm/v/omega-supreme.svg?style=flat-square)](http://browsenpm.org/package/omega-supreme)[![Build Status](http://img.shields.io/travis/primus/omega-supreme/master.svg?style=flat-square)](https://travis-ci.org/primus/omega-supreme)[![Dependencies](https://img.shields.io/david/primus/omega-supreme.svg?style=flat-square)](https://david-dm.org/primus/omega-supreme)[![Coverage Status](http://img.shields.io/coveralls/primus/omega-supreme/master.svg?style=flat-square)](https://coveralls.io/r/primus/omega-supreme?branch=master)[![IRC channel](http://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](http://webchat.freenode.net/?channels=primus)
 
 Known for his great strength and greater courage, Omega Supreme is the Autobots’
 last line of defense against the Decepticons. He will stand unwaveringly against
