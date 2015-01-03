@@ -28,15 +28,15 @@
   "homepage": "https://github.com/primus/omega-supreme",
   "dependencies": {
     "async": "0.9.x",
-    "request": "2.47.x",
+    "request": "2.51.x",
     "routable": "0.0.x"
   },
   "devDependencies": {
     "assume": "0.0.x",
     "istanbul": "0.3.x",
-    "mocha": "2.0.x",
+    "mocha": "2.1.x",
     "pre-commit": "0.0.x",
     "primus": "2.4.x",
-    "ws": "0.4.x"
+    "ws": "0.6.x"
   }
 }
