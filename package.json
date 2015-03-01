@@ -4,9 +4,9 @@
   "description": "Known for his great strength and greater courage, Omega Supreme is the Autobots’ last line of defense against the Decepticons",
   "main": "index.js",
   "scripts": {
-    "coverage": "istanbul cover node_modules/.bin/_mocha -- test.js",
-    "test": "mocha test.js",
-    "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- test.js"
+    "coverage": "istanbul cover node_modules/.bin/_mocha",
+    "test": "mocha",
+    "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
   "homepage": "https://github.com/primus/omega-supreme",
   "dependencies": {
     "async": "0.9.x",
-    "request": "2.52.x",
+    "request": "2.53.x",
     "routable": "0.0.x"
   },
   "devDependencies": {
