@@ -1,6 +1,6 @@
 # Omega Supreme
 
-[![Version npm](http://img.shields.io/npm/v/omega-supreme.svg?style=flat-square)](http://browsenpm.org/package/omega-supreme)[![Build Status](http://img.shields.io/travis/primus/omega-supreme/master.svg?style=flat-square)](https://travis-ci.org/primus/omega-supreme)[![Dependencies](https://img.shields.io/david/primus/omega-supreme.svg?style=flat-square)](https://david-dm.org/primus/omega-supreme)[![Coverage Status](http://img.shields.io/coveralls/primus/omega-supreme/master.svg?style=flat-square)](https://coveralls.io/r/primus/omega-supreme?branch=master)[![IRC channel](http://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](http://webchat.freenode.net/?channels=primus)
+[![Version npm](https://img.shields.io/npm/v/omega-supreme.svg?style=flat-square)](http://browsenpm.org/package/omega-supreme)[![Build Status](https://img.shields.io/travis/primus/omega-supreme/master.svg?style=flat-square)](https://travis-ci.org/primus/omega-supreme)[![Dependencies](https://img.shields.io/david/primus/omega-supreme.svg?style=flat-square)](https://david-dm.org/primus/omega-supreme)[![Coverage Status](https://img.shields.io/coveralls/primus/omega-supreme/master.svg?style=flat-square)](https://coveralls.io/r/primus/omega-supreme?branch=master)[![IRC channel](https://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](https://webchat.freenode.net/?channels=primus)
 
 Known for his great strength and greater courage, Omega Supreme is the Autobots’
 last line of defense against the Decepticons. He will stand unwaveringly against
@@ -114,7 +114,7 @@ Sending a message to a spark on a different server:
 primus.forward('http://localhost:8080', {
   event: 'name'
 }, 'ad8a-280z-18', function (err, data) {
-  // data.calls = 1 if it was successful.
+  // data.send = 1 if it was successful.
 });
 ```
 
@@ -152,6 +152,6 @@ you want.
 
 ## License
 
-MIT
+[MIT](LICENSE)
 
 ![Omega Supreme](https://raw.githubusercontent.com/primus/omega-supreme/master/logo.jpg)
