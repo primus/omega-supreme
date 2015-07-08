@@ -73,7 +73,7 @@ module.exports = function omega(options) {
     req.on('data', function data(chunk) {
       buff += chunk;
     }).once('end', function end() {
-      parse(primus, buff, res, next);
+      parse(primus, buff, res);
     });
   }
 
@@ -91,59 +91,64 @@ module.exports = function omega(options) {
  *
  * @param {String} raw Raw text data.
  * @param {Response} res HTTP response.
- * @param {Function} next Middleware continuation.
  * @api private
  */
-function parse(primus, raw, res, next) {
-  primus.decoder.call(primus, raw, function decoded(err, data) {
-    if (
-         err                              // No error..
-      || 'object' !== typeof data         // Should be an object.
-      || Array.isArray(data)              // A real object, not array.
-      || !data.msg                        // The data we send should be defined.
-    ) {
-      res.statusCode = 500;
-      res.setHeader('Content-Type', 'application/json');
-      return res.end('{ "ok": false, "reason": "invalid data structure" }');
-    }
+function parse(primus, raw, res) {
+  var called = 0
+    , data
+    , err;
 
-    var called = 0;
+  try {
+    data = JSON.parse(raw);
+  } catch (e) {
+    err = e;
+  }
 
-    //
-    // Process the incoming messages in three different modes:
-    //
-    // Sparks: The data.sparks is an array with spark id's which we should write
-    //         the data to.
-    // Spark:  The data.sparks is the id of one single individual spark which
-    //         should receive the data.
-    // All:    Broadcast the message to every single connected spark if no
-    //         `data.sparks` has been provided.
-    //
-    if (Array.isArray(data.sparks)) {
-      data.sparks.forEach(function each(id) {
-        var spark = primus.spark(id);
+  if (
+       err                              // No error..
+    || 'object' !== typeof data         // Should be an object.
+    || Array.isArray(data)              // A real object, not array.
+    || !data.msg                        // The data we send should be defined.
+  ) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    return res.end('{ "ok": false, "reason": "invalid data structure" }');
+  }
 
-        if (spark) {
-          spark.write(data.msg);
-          called++;
-        }
-      });
-    } else if ('string' === typeof data.sparks && data.sparks) {
-      var spark = primus.spark(data.sparks);
+  //
+  // Process the incoming messages in three different modes:
+  //
+  // Sparks: The data.sparks is an array with spark id's which we should write
+  //         the data to.
+  // Spark:  The data.sparks is the id of one single individual spark which
+  //         should receive the data.
+  // All:    Broadcast the message to every single connected spark if no
+  //         `data.sparks` has been provided.
+  //
+  if (Array.isArray(data.sparks)) {
+    data.sparks.forEach(function each(id) {
+      var spark = primus.spark(id);
 
       if (spark) {
         spark.write(data.msg);
         called++;
       }
-    } else {
-      primus.forEach(function each(spark) {
-        spark.write(data.msg);
-        called++;
-      });
-    }
+    });
+  } else if ('string' === typeof data.sparks && data.sparks) {
+    var spark = primus.spark(data.sparks);
 
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.end('{ "ok": true, "send":'+ called +' }');
-  });
+    if (spark) {
+      spark.write(data.msg);
+      called++;
+    }
+  } else {
+    primus.forEach(function each(spark) {
+      spark.write(data.msg);
+      called++;
+    });
+  }
+
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.end('{ "ok": true, "send":'+ called +' }');
 }

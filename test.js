@@ -159,6 +159,26 @@ describe('omega supreme', function () {
         next();
       });
     });
+
+    it('works when using a custom parser', function (next) {
+      primus.destroy({ close: false }, function () {
+        primus =  new Primus(server, { parser: 'binary' });
+        primus.use('omega', omega);
+
+        request({
+          url: url(server.url, '/primus/omega/supreme'),
+          auth: { user: 'omega', pass: 'supreme' },
+          method: 'PUT',
+          json: { msg: 'foo' }
+        }, function (err, res, body) {
+          if (err) return next(err);
+
+          assume(res.statusCode).to.equal(200);
+          assume(body.ok).to.equal(true);
+          next();
+        });
+      });
+    });
   });
 
   describe('forward', function () {
