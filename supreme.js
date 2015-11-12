@@ -1,7 +1,7 @@
 'use strict';
 
 var request = require('request')
-  , url = require('url').resolve
+  , url = require('url')
   , async = require('async');
 
 //
@@ -58,7 +58,7 @@ supreme.server = function server(primus, options) {
    * @returns {Primus}
    * @api public
    */
-  primus.forward = function forward(servers, msg, sparks, fn) {
+  primus.forward = function forward(servers, msg, sparks, alter, fn) {
     servers = (!Array.isArray(servers) ? [servers] : servers).filter(Boolean);
 
     var type = 'broadcast'
@@ -68,6 +68,11 @@ supreme.server = function server(primus, options) {
     if ('function' === typeof sparks) {
       fn = sparks;
       sparks = '';
+    }
+
+    if (!fn && ('function' === typeof alter)) {
+      fn = alter;
+      alter = null;
     }
 
     //
@@ -122,9 +127,13 @@ supreme.server = function server(primus, options) {
     });
 
     async.mapLimit(servers, options.concurrently, function contact(server, next) {
+      var urlObj = url.parse(url.resolve(server, options.url));
+      if (alter) {
+        urlObj = alter(urlObj);
+      }
       request({
         method: options.method,               // Set the correct method.
-        uri: url(server, options.url),        // Compile the correct URL
+        uri: url.format(urlObj),              // Compile the correct URL
         json: {                               // The actual JSON payload
           msg: msg,                           // - The message we write
           sparks: sparks                      // - Who the message should receive
@@ -153,7 +162,7 @@ supreme.server = function server(primus, options) {
         }
 
         if (err) {
-          err.url = url(server, options.url);
+          err.url = url.resolve(server, options.url);
           err.status = status || 500;
           err.body = body;
           err.type = type;
