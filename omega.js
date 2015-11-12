@@ -40,7 +40,7 @@ module.exports = function omega(options) {
    */
   function intercept(req, res, next) {
     if (
-         !route.test(req.url)           // Incorrect URL.
+         !route.test(req.uri.pathname)  // Incorrect URL.
       || !req.headers.authorization     // Missing authorization.
       || options.method !== req.method  // Invalid method.
     ) return next();
