@@ -41,12 +41,13 @@ supreme.options = function optional(options) {
  * @api public
  */
 supreme.server = function server(primus, options) {
+  var index = primus.indexOfLayer('authorization');
   options = supreme.options(options);
 
   //
   // Load the middleware so we can intercept messages.
   //
-  primus.before('omega-supreme', require('./omega')(options));
+  primus.before('omega-supreme', require('./omega'), options, index);
 
   /**
    * Forward a message to a given server set.
