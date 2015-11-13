@@ -76,9 +76,20 @@ describe('omega supreme', function () {
 
   describe('middleware', function () {
     it('adds a middleware layer', function () {
-      assume(!~primus.indexOfLayer('omega-supreme')).to.be.true();
+      assume(primus.indexOfLayer('omega-supreme')).equals(-1);
       primus.use('omega', omega);
-      assume(!!~primus.indexOfLayer('omega-supreme')).to.be.true();
+      assume(primus.indexOfLayer('omega-supreme')).is.above(-1);
+    });
+
+    it('adds the middleware layer before the authorization layer', function () {
+      var i, j;
+
+      assume(primus.indexOfLayer('authorization')).is.above(-1);
+
+      primus.use('omega', omega);
+      i = primus.indexOfLayer('omega-supreme');
+      j = primus.indexOfLayer('authorization');
+      assume(i).is.below(j);
     });
 
     it('does not handle invalid requests (wrong path)', function (next) {
