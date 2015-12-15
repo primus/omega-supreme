@@ -138,13 +138,12 @@ primus.forward('http://localhost:8080', {
 });
 ```
 
-In all the examples above, we've sent an `event` packet. This is the event format
-that the [emit](https://github.com/primus/emit) plugin supports. If you're using
-`primus-emitter` instead, and you want to trigger events you should use this
-format:
+In all the examples above, we've sent an `event` packet. If you're using
+[`primus-emit`](https://github.com/primus/primus-emit) and you want to trigger
+custom events you should use this format:
 
 ```js
-primus.forward('http://localhost:8080', { emit: [ eventType, msg ] }, fn);
+primus.forward('http://localhost:8080', { emit: [ eventName, ...args ] }, fn);
 ```
 
 Keep in mind that you don't have to write event blobs, you can write anything
