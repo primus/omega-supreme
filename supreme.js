@@ -47,7 +47,7 @@ supreme.server = function server(primus, options) {
   //
   // Load the middleware so we can intercept messages.
   //
-  primus.before('omega-supreme', require('./omega'), options, index);
+  primus.use('omega-supreme', require('./omega'), options, index);
 
   /**
    * Forward a message to a given server set.
