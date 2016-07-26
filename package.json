@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/primus/omega-supreme",
   "dependencies": {
-    "async": "1.5.x",
+    "async": "2.0.x",
     "request": "2.74.x",
     "routable": "0.0.x"
   },

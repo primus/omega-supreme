@@ -1,8 +1,8 @@
 'use strict';
 
-var request = require('request')
-  , url = require('url').resolve
-  , async = require('async');
+var mapLimit = require('async/mapLimit')
+  , request = require('request')
+  , url = require('url').resolve;
 
 //
 // Expose the Primus plugin.
@@ -122,7 +122,7 @@ supreme.server = function server(primus, options) {
       local: false
     });
 
-    async.mapLimit(servers, options.concurrently, function contact(server, next) {
+    mapLimit(servers, options.concurrently, function contact(server, next) {
       request({
         method: options.method,               // Set the correct method.
         uri: url(server, options.url),        // Compile the correct URL
