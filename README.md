@@ -31,8 +31,8 @@ npm install --save omega-supreme
 Omega Supreme should be added as a **plugin** in Primus. The plugin will also add
 a `omega-supreme` middleware which will intercept the incoming HTTP requests and
 will take care of the actual distribution of the message to every single connected
-client. Adding plugins in Primus is done using the `.use(name, plugin)` method. The
-options for the plugin can directly be added to the constructor of your Primus
+client. Adding plugins in Primus is done using the `.plugin(name, plugin)` method.
+The options for the plugin can directly be added to the constructor of your Primus
 server so all the configuration of the server and the plugins is in one central
 location as illustrated in the example below:
 
@@ -46,7 +46,7 @@ var primus = new Primus(server, {
   /* Add the options here, in the Primus's options */
 });
 
-primus.use('omega-supreme', require('omega-supreme'));
+primus.plugin('omega-supreme', require('omega-supreme'));
 
 server.listen(8080);
 ```
