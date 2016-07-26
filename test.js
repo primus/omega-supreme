@@ -51,7 +51,7 @@ describe('omega supreme', function () {
 
   it('exposes a plugin interface', function () {
     assume(omega.server).to.be.a('function');
-    primus.use('omega', omega);
+    primus.plugin('omega', omega);
   });
 
   describe('.options', function () {
@@ -77,7 +77,7 @@ describe('omega supreme', function () {
   describe('middleware', function () {
     it('adds a middleware layer', function () {
       assume(primus.indexOfLayer('omega-supreme')).equals(-1);
-      primus.use('omega', omega);
+      primus.plugin('omega', omega);
       assume(primus.indexOfLayer('omega-supreme')).is.above(-1);
     });
 
@@ -86,14 +86,14 @@ describe('omega supreme', function () {
 
       assume(primus.indexOfLayer('authorization')).is.above(-1);
 
-      primus.use('omega', omega);
+      primus.plugin('omega', omega);
       i = primus.indexOfLayer('omega-supreme');
       j = primus.indexOfLayer('authorization');
       assume(i).is.below(j);
     });
 
     it('does not handle invalid requests (wrong path)', function (next) {
-      primus.use('omega', omega);
+      primus.plugin('omega', omega);
 
       request({
         url: url(server.url, '/primus/wrong/path'),
@@ -109,7 +109,7 @@ describe('omega supreme', function () {
     });
 
     it('does not handle invalid requests (wrong method)', function (next) {
-      primus.use('omega', omega);
+      primus.plugin('omega', omega);
 
       request({
         url: url(server.url, '/primus/omega/supreme'),
@@ -124,7 +124,7 @@ describe('omega supreme', function () {
     });
 
     it('does not handle invalid requests (missing headers)', function (next) {
-      primus.use('omega', omega);
+      primus.plugin('omega', omega);
 
       request({
         url: url(server.url, '/primus/omega/supreme'),
@@ -139,7 +139,7 @@ describe('omega supreme', function () {
     });
 
     it('handles unauthorized requests', function (next) {
-      primus.use('omega', omega);
+      primus.plugin('omega', omega);
 
       request({
         url: url(server.url, '/primus/omega/supreme'),
@@ -155,7 +155,7 @@ describe('omega supreme', function () {
     });
 
     it('handles requests with an invalid body', function (next) {
-      primus.use('omega', omega);
+      primus.plugin('omega', omega);
 
       request({
         url: url(server.url, '/primus/omega/supreme'),
@@ -174,7 +174,7 @@ describe('omega supreme', function () {
     it('works when using a custom parser', function (next) {
       primus.destroy({ close: false }, function () {
         primus =  new Primus(server, { parser: 'binary' });
-        primus.use('omega', omega);
+        primus.plugin('omega', omega);
 
         request({
           url: url(server.url, '/primus/omega/supreme'),
@@ -195,13 +195,13 @@ describe('omega supreme', function () {
   describe('forward', function () {
     it('adds a forward method', function () {
       assume(primus.forward).to.be.undefined();
-      primus.use('omega', omega);
+      primus.plugin('omega', omega);
       assume(primus.forward).to.be.a('function');
     });
 
     it('returns the count of sparks matching (which is 0)', function (next) {
-      primus.use('omega', omega);
-      primus2.use('omega', omega);
+      primus.plugin('omega', omega);
+      primus2.plugin('omega', omega);
 
       primus.forward(server2.url, 'foo', 'unknown', function (err, data) {
         if (err) return next(err);
@@ -212,8 +212,8 @@ describe('omega supreme', function () {
     });
 
     it('returns the count of sparks matching (which is 1)', function (next) {
-      primus.use('omega', omega);
-      primus2.use('omega', omega);
+      primus.plugin('omega', omega);
+      primus2.plugin('omega', omega);
 
       var client = primus2.Socket(server2.url);
       client.id(function get(id) {
@@ -227,7 +227,7 @@ describe('omega supreme', function () {
     });
 
     it('does not send a request when the sparks are all local', function (next) {
-      primus2.use('omega', omega);
+      primus2.plugin('omega', omega);
 
       var client = primus2.Socket(server2.url);
       client.id(function get(id) {
@@ -243,8 +243,8 @@ describe('omega supreme', function () {
     });
 
     it('broadcasts if no spark id is provided', function (next) {
-      primus.use('omega', omega);
-      primus2.use('omega', omega);
+      primus.plugin('omega', omega);
+      primus2.plugin('omega', omega);
 
       var connections = [
         primus2.Socket(server2.url), primus2.Socket(server2.url),
@@ -277,8 +277,8 @@ describe('omega supreme', function () {
     });
 
     it('merges local and server sent counts', function (next) {
-      primus.use('omega', omega);
-      primus2.use('omega', omega);
+      primus.plugin('omega', omega);
+      primus2.plugin('omega', omega);
 
       var connections = [
         primus.Socket(server.url), primus2.Socket(server2.url),
@@ -314,8 +314,8 @@ describe('omega supreme', function () {
     });
 
     it('sends the data to one connected client', function (next) {
-      primus.use('omega', omega);
-      primus2.use('omega', omega);
+      primus.plugin('omega', omega);
+      primus2.plugin('omega', omega);
 
       var client = primus2.Socket(server2.url);
 
@@ -332,8 +332,8 @@ describe('omega supreme', function () {
     });
 
     it('sends the data to some connected clients', function (next) {
-      primus.use('omega', omega);
-      primus2.use('omega', omega);
+      primus.plugin('omega', omega);
+      primus2.plugin('omega', omega);
 
       var connections = [
         primus.Socket(server.url), primus2.Socket(server2.url),
@@ -373,8 +373,8 @@ describe('omega supreme', function () {
     });
 
     it('bails out when forwarding to an empty url', function (next) {
-      primus.use('omega', omega);
-      primus2.use('omega', omega);
+      primus.plugin('omega', omega);
+      primus2.plugin('omega', omega);
 
       var client = primus2.Socket(server2.url);
 
@@ -389,7 +389,7 @@ describe('omega supreme', function () {
     });
 
     it('receives an error when forwarding to a dead server', function (next) {
-      primus.use('omega', omega);
+      primus.plugin('omega', omega);
 
       primus.forward('http://localhost:1024', 'foo', function (err) {
         assume(err).to.be.instanceOf(Error);
@@ -401,8 +401,8 @@ describe('omega supreme', function () {
 
     it('receives an error when the request is not successful', function (next) {
       primus2.options.url = '/primus/supreme/omega';
-      primus2.use('omega', omega);
-      primus.use('omega', omega);
+      primus2.plugin('omega', omega);
+      primus.plugin('omega', omega);
 
       primus.forward(server2.url, 'foo', function (err) {
         assume(err).to.be.instanceOf(Error);
@@ -414,8 +414,8 @@ describe('omega supreme', function () {
 
     it('receives an error when the response body is malformed', function (next) {
       primus.options.url = '/primus/spec';
-      primus.use('omega', omega);
-      primus2.use('omega', omega);
+      primus.plugin('omega', omega);
+      primus2.plugin('omega', omega);
 
       primus.forward(server2.url, 'foo', function (err) {
         assume(err).to.be.instanceOf(Error);
