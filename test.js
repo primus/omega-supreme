@@ -553,7 +553,7 @@ describe('omega supreme', function () {
 
           server.url = 'http://localhost:'+ server.port;
           server2.url = 'http://localhost:'+ server2.port;
-
+          var redis = new ioredis();
           primus = new Primus(server, {
             transformer: 'websockets',
             rooms: { adapter: roomsAdapter },
@@ -562,7 +562,7 @@ describe('omega supreme', function () {
               'omega-supreme': omega,
               'metroplex': metroplex,
             },
-            redis: ioredis
+            redis: redis
           });
           primus2 = new Primus(server2, {
             transformer: 'websockets',
@@ -572,7 +572,7 @@ describe('omega supreme', function () {
               'omega-supreme': omega,
               'metroplex': metroplex,
             },
-            redis: ioredis
+            redis: redis
           });
 
           server.listen(server.port, function () {
