@@ -138,11 +138,6 @@ function parse(primus, raw, res) {
     }
     //get the sparks in the rooms
     primus.room(data.rooms).clients(function(err, sparks) {
-      if (err) {
-        res.statusCode = 400;
-        return res.end(JSON.stringify(err));
-      }
-
       // check if the return is multiple rooms with array of sparks for each room
       if (!Array.isArray(sparks)) {
         var rooms = sparks;
