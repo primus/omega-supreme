@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "coverage": "istanbul cover _mocha",
+    "coverage-win": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec",
     "test": "mocha",
     "test-travis": "istanbul cover _mocha --report lcovonly"
   },

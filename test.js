@@ -473,6 +473,60 @@ describe('omega supreme', function () {
         });
       });
     });
+    it('should broadcast to all users in a room except one', function (done) {
+      var excluded;
+      async.each(connections, function (client, next) {
+        client.on('open', next);
+      }, function (err) {
+        if (err) return done(err);
+        async.map(connections, function (client, next) {
+          client.id(function (id) {
+            excluded = id;
+            primus.join(id, rooms[0], next);
+          });
+        }, function (err, ids) {
+          if (err) return done(err);
+          request({
+            url: url(server.url, '/primus/omega/supreme'),
+            auth: {user: 'omega', pass: 'supreme'},
+            method: 'PUT',
+            json: {msg: 'foo', rooms: rooms[0], except: excluded}
+          }, function (err, res, body) {
+            if (err) return next(err);
+            assume(res.statusCode).to.equal(200);
+            assume(body.ok).to.equal(true);
+            assume(body.send).to.equal(connections.length - 1);
+            done();
+          });
+        });
+      });
+    });
+    it('should not broadcast to any users in an empty room', function (done) {
+      async.each(connections, function (client, next) {
+        client.on('open', next);
+      }, function (err) {
+        if (err) return done(err);
+        async.map(connections, function (client, next) {
+          client.id(function (id) {
+            primus.join(id, rooms[0], next);
+          });
+        }, function (err, ids) {
+          if (err) return done(err);
+          request({
+            url: url(server.url, '/primus/omega/supreme'),
+            auth: {user: 'omega', pass: 'supreme'},
+            method: 'PUT',
+            json: {msg: 'foo', rooms: rooms[1]}
+          }, function (err, res, body) {
+            if (err) return next(err);
+            assume(res.statusCode).to.equal(200);
+            assume(body.ok).to.equal(true);
+            assume(body.send).to.equal(0);
+            done();
+          });
+        });
+      });
+    });
     it('should broadcast to all users in multiple rooms', function (done) {
       var counter = 0;
       async.each(connections, function (client, next) {
