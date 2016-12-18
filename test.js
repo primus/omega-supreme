@@ -190,6 +190,46 @@ describe('omega supreme', function () {
         });
       });
     });
+
+    describe('customization', function () {
+      function supreme (primus, parse, req, res) {
+        var buff = '';
+
+        res.setHeader('omegamiddleware', 'true');
+
+        req.setEncoding('utf8');
+        req.on('data', function data(chunk) {
+          buff += chunk;
+        }).on('end', function end() {
+          parse(primus, buff, res);
+        });
+      }
+
+      it('allows to specify a customization hook', function () {
+        var options = omega.options({ middleware: supreme });
+
+        assume(options.middleware).to.be.a('function');
+      });
+
+      it('executes the customization hook', function (next) {
+        primus.options.middleware = supreme;
+        primus.plugin('omega', omega);
+
+        request({
+          url: url(server.url, '/primus/omega/supreme'),
+          auth: { user: 'omega', pass: 'supreme' },
+          method: 'PUT',
+          json: { msg: 'foo' }
+        }, function (err, res, body) {
+          if (err) return next(err);
+
+          assume(res.headers.omegamiddleware).to.equal('true');
+          assume(res.statusCode).to.equal(200);
+          assume(body.ok).to.equal(true);
+          next();
+        });
+      });
+    });
   });
 
   describe('forward', function () {
@@ -424,44 +464,4 @@ describe('omega supreme', function () {
       });
     });
   });
-
-  describe('requestMiddleware', function() {
-    var middleware = function(primusObj,parse, req, res, next) {
-      var buff = '';
-      res.setHeader('omegamiddleware', 'true');
-      req.setEncoding('utf8');
-      req.on('data', function data(chunk) {
-        buff += chunk;
-      }).once('end', function end() {
-        parse(primusObj, buff, res);
-      });
-    };
-
-    it('attaches request middleware', function () {
-        var options = omega.options({
-            middleware: middleware
-        });
-
-        assume(options.middleware).to.be.a('function');
-    });
-
-    it('executes middleware', function(next) {
-      primus.options.middleware = middleware;
-      primus.plugin('omega', omega);
-
-      request({
-          url: url(server.url, '/primus/omega/supreme'),
-          auth: { user: 'omega', pass: 'supreme' },
-          method: 'PUT',
-          json: { msg: 'foo' }
-      }, function (err, res, body) {
-          if (err) return next(err);
-          assume(res.statusCode).to.equal(200);
-          assume(body.ok).to.equal(true);
-          assume(res.headers.omegamiddleware).to.equal('true');
-          next();
-      });
-
-    })
-  })
 });

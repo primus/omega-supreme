@@ -149,42 +149,46 @@ primus.forward('http://localhost:8080', { emit: [ eventName, ...args ] }, fn);
 Keep in mind that you don't have to write event blobs, you can write anything
 you want.
 
-## Custom middleware
-omega-supreme allows you to set up a custom middleware that can be executed before
-the default parse logic or replace it.
- 
-To use the middleware just append the middleware function to primus options.
+## Customize the middleware behavior
+
+omega-supreme allows you to customize the behavior of the middleware that is
+added with the plugin.
+
+To define a custom logic, you can use the `middleware` option.
 
 ```js
 primus.options.middleware = middleware;
 ```
 
-The middleware has access to the following: 
+where `middleware` is a function which takes the following arguments:
 
 Name                | Type     | Description
 --------------------|----------|----------------------
-primus              | Object   | The Primus server instance 
-parse               | Function | The default parsing function has the following signature `parse(primus, buff, res)` where buff is the raw body 
-req                 | Object   | The http request
-res                 | Object   | The http response
+primus              | Object   | The Primus server instance
+parse               | Function | The default parsing function has the following signature `parse(primus, buff, res)` where buff is the raw request body
+req                 | Object   | The HTTP request
+res                 | Object   | The HTTP response
 next                | Function | The next callback
 
-### Example middleware
-This middleware adds a custom header to the response
+### Example
+
+This example adds a custom header to the response.
 
 ```js
-middleware = function(primus, parse, req, res, next) {
+function middleware(primus, parse, req, res, next) {
   var raw = '';
+
   res.setHeader('omegamiddleware', 'true');
+
   req.setEncoding('utf8');
   req.on('data', function data(chunk) {
     raw += chunk;
-  }).once('end', function end() {
+  }).on('end', function end() {
     parse(primus, raw, res);
   });
 }
 ```
- 
+
 ## License
 
 [MIT](LICENSE)
