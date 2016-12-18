@@ -424,4 +424,44 @@ describe('omega supreme', function () {
       });
     });
   });
+
+  describe('requestMiddleware', function() {
+    var middleware = function(primusObj,parse, req, res, next) {
+      var buff = '';
+      res.setHeader('omegamiddleware', 'true');
+      req.setEncoding('utf8');
+      req.on('data', function data(chunk) {
+        buff += chunk;
+      }).once('end', function end() {
+        parse(primusObj, buff, res);
+      });
+    };
+
+    it('attaches request middleware', function () {
+        var options = omega.options({
+            middleware: middleware
+        });
+
+        assume(options.middleware).to.be.a('function');
+    });
+
+    it('executes middleware', function(next) {
+      primus.options.middleware = middleware;
+      primus.plugin('omega', omega);
+
+      request({
+          url: url(server.url, '/primus/omega/supreme'),
+          auth: { user: 'omega', pass: 'supreme' },
+          method: 'PUT',
+          json: { msg: 'foo' }
+      }, function (err, res, body) {
+          if (err) return next(err);
+          assume(res.statusCode).to.equal(200);
+          assume(body.ok).to.equal(true);
+          assume(res.headers.omegamiddleware).to.equal('true');
+          next();
+      });
+
+    })
+  })
 });

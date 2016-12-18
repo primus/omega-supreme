@@ -64,17 +64,21 @@ module.exports = function omega(options) {
     var primus = this
       , buff = '';
 
-    //
-    // Receive the data from the socket. The `setEncoding` ensures that Unicode
-    // chars are correctly buffered and parsed before the `data` event is
-    // emitted.
-    //
-    req.setEncoding('utf8');
-    req.on('data', function data(chunk) {
-      buff += chunk;
-    }).once('end', function end() {
-      parse(primus, buff, res);
-    });
+    if (typeof options.middleware === 'function') {
+      options.middleware(primus, parse, req, res, next);
+    } else {
+      //
+      // Receive the data from the socket. The `setEncoding` ensures that Unicode
+      // chars are correctly buffered and parsed before the `data` event is
+      // emitted.
+      //
+      req.setEncoding('utf8');
+      req.on('data', function data(chunk) {
+        buff += chunk;
+      }).once('end', function end() {
+        parse(primus, buff, res);
+      });
+    }
   }
 
   //

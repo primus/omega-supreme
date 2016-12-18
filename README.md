@@ -149,6 +149,42 @@ primus.forward('http://localhost:8080', { emit: [ eventName, ...args ] }, fn);
 Keep in mind that you don't have to write event blobs, you can write anything
 you want.
 
+## Custom middleware
+omega-supreme allows you to set up a custom middleware that can be executed before
+the default parse logic or replace it.
+ 
+To use the middleware just append the middleware function to primus options.
+
+```js
+primus.options.middleware = middleware;
+```
+
+The middleware has access to the following: 
+
+Name                | Type     | Description
+--------------------|----------|----------------------
+primus              | Object   | The Primus server instance 
+parse               | Function | The default parsing function has the following signature `parse(primus, buff, res)` where buff is the raw body 
+req                 | Object   | The http request
+res                 | Object   | The http response
+next                | Function | The next callback
+
+### Example middleware
+This middleware adds a custom header to the response
+
+```js
+middleware = function(primus, parse, req, res, next) {
+  var raw = '';
+  res.setHeader('omegamiddleware', 'true');
+  req.setEncoding('utf8');
+  req.on('data', function data(chunk) {
+    raw += chunk;
+  }).once('end', function end() {
+    parse(primus, raw, res);
+  });
+}
+```
+ 
 ## License
 
 [MIT](LICENSE)
