@@ -189,6 +189,17 @@ function middleware(primus, parse, req, res, next) {
 }
 ```
 
+### Unofficial middleware
+
+#### Omega Supreme Rooms Middleware
+
+[![Version npm](https://img.shields.io/npm/v/omega-supreme-rooms-middleware.svg?style=flat-square)](http://browsenpm.org/package/omega-supreme-rooms-middleware)
+[![Build Status](https://img.shields.io/travis/fadeenk/omega-supreme-rooms-middleware/master.svg?style=flat-square)](https://travis-ci.org/fadeenk/omega-supreme-rooms-middleware)
+[![Dependencies](https://img.shields.io/david/fadeenk/omega-supreme-rooms-middleware.svg?style=flat-square)](https://david-dm.org/fadeenk/omega-supreme-rooms-middleware)
+[![Coverage Status](https://img.shields.io/coveralls/fadeenk/omega-supreme-rooms-middleware/master.svg?style=flat-square)](https://coveralls.io/r/fadeenk/omega-supreme-rooms-middleware?branch=master)
+
+This middleware adds support for `primus-rooms` and automatically integrates with `metroplex` if included.
+
 ## License
 
 [MIT](LICENSE)
