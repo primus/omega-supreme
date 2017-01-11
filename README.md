@@ -191,7 +191,7 @@ function middleware(primus, parse, req, res, next) {
 
 ### Unofficial middleware
 
-#### Omega Supreme Rooms Middleware
+#### [Omega Supreme Rooms Middleware](https://github.com/fadeenk/omega-supreme-rooms-middleware)
 
 [![Version npm](https://img.shields.io/npm/v/omega-supreme-rooms-middleware.svg?style=flat-square)](http://browsenpm.org/package/omega-supreme-rooms-middleware)
 [![Build Status](https://img.shields.io/travis/fadeenk/omega-supreme-rooms-middleware/master.svg?style=flat-square)](https://travis-ci.org/fadeenk/omega-supreme-rooms-middleware)
