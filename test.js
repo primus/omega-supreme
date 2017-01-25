@@ -316,6 +316,45 @@ describe('omega supreme', function () {
       });
     });
 
+    it('broadcasts locally if no spark id and no servers are provided', function (next) {
+      primus.plugin('omega', omega);
+
+      var connections = [
+        primus.Socket(server.url), primus.Socket(server.url),
+        primus.Socket(server.url), primus.Socket(server.url),
+        primus.Socket(server.url), primus.Socket(server.url),
+        primus.Socket(server.url), primus.Socket(server.url),
+        primus.Socket(server.url), primus.Socket(server.url),
+        primus.Socket(server.url), primus.Socket(server.url),
+        primus.Socket(server.url), primus.Socket(server.url)
+      ];
+
+      async.each(connections, function (client, next) {
+        client.on('open', next);
+      }, function (err) {
+        if (err) return next(err);
+
+        async.each(connections, function (client, next) {
+          client.on('data', function (msg) {
+            assume(msg).to.equal('bar');
+            next();
+          });
+        }, function (err) {
+          if (err) return next(err);
+        });
+
+        primus.forward([], 'bar', function (err, data) {
+          if (err) return next(err);
+
+          assume(data.ok).true();
+          assume(data.send).to.equal(connections.length);
+          assume(data.local).true();
+
+          next();
+        });
+      });
+    });
+
     it('merges local and server sent counts', function (next) {
       primus.plugin('omega', omega);
       primus2.plugin('omega', omega);
