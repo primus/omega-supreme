@@ -76,6 +76,14 @@ assumptions to the data that is sent to the server:
   spark id. If no `sparks` property is supplied we assume that the given message
   needs to be broadcasted to every single connection on this server.
 
+If `primus-rooms` is installed, you can use extra properties
+
+- The `rooms` property can be an array or a string of room names. Message will be
+ broadcasted to all the sparks connected to the rooms.
+- The `except` Property can be an array or a string of spark ids. Message will ***not***
+ be broadcasted to the sparks in the except property. This property will ***only*** be
+ used when rooms property is provided
+
 When your message has been successfully processed by the server it returns a
 JSON object with some information:
 

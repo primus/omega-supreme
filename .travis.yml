@@ -6,6 +6,8 @@ node_js:
   - "4"
 script:
   - "npm run test-travis"
+services:
+  - redis-server
 after_script:
   - "npm install coveralls@2 && cat coverage/lcov.info | coveralls"
 notifications:

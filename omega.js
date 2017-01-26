@@ -108,6 +108,8 @@ function parse(primus, raw, res) {
     err = e;
   }
 
+  res.setHeader('Content-Type', 'application/json'); // set response content type
+
   if (
        err                              // No error..
     || 'object' !== typeof data         // Should be an object.
@@ -115,13 +117,16 @@ function parse(primus, raw, res) {
     || !data.msg                        // The data we send should be defined.
   ) {
     res.statusCode = 500;
-    res.setHeader('Content-Type', 'application/json');
     return res.end('{ "ok": false, "reason": "invalid data structure" }');
   }
 
+  var callingRooms = primus.$ && primus.$.rooms && (Array.isArray(data.rooms) || typeof data.rooms === 'string');
   //
-  // Process the incoming messages in three different modes:
+  // Process the incoming messages in four different modes:
   //
+  // Rooms:  If primus-rooms is being used. Takes in rooms array or a string for
+  //         the room to broadcast to. Also an optional except array or a string of
+  //         sparkIDs to exclude.
   // Sparks: The data.sparks is an array with spark id's which we should write
   //         the data to.
   // Spark:  The data.sparks is the id of one single individual spark which
@@ -129,7 +134,64 @@ function parse(primus, raw, res) {
   // All:    Broadcast the message to every single connected spark if no
   //         `data.sparks` has been provided.
   //
-  if (Array.isArray(data.sparks)) {
+  if (callingRooms) {
+    // initialize except array
+    data.except = data.except || [];
+    if (typeof data.except === 'string') {
+      data.except = [data.except];
+    }
+    //get the sparks in the rooms
+    primus.room(data.rooms).clients(function(err, sparks) {
+      // check if the return is multiple rooms with array of sparks for each room
+      if (!Array.isArray(sparks)) {
+        var rooms = sparks;
+        sparks = []; // reset sparks array
+        var uniqueSparks = {}; // set up hash table to prevent multiple msgs sent to the same spark if in multiple rooms
+        Object.keys(rooms).forEach(function(room) {
+          rooms[room].forEach(function(spark) {
+            if (!uniqueSparks.hasOwnProperty(spark)) { // if the spark is not in the hash add it to sparks array
+              if (data.except.indexOf(spark) === -1) { // filter while checking for unique
+                sparks.push(spark);
+              }
+              uniqueSparks[spark] = true;
+            }
+          })
+        })
+      } else if (Array.isArray(data.except)) {  // exclude sparks in except array
+        sparks = sparks.filter(function(id) {
+          return data.except.indexOf(id) === -1;
+        });
+      }
+
+      if (sparks.length === 0) {
+        res.statusCode = 200;
+        return res.end('{ "ok": true, "send":'+ called +' }')
+      }
+
+      // call forward method to transmit the message
+      if (primus.forward.sparks) { // support multiple servers through multiplex 
+        primus.forward.sparks(sparks, data.msg, function (err, status) {
+          if (err) {
+            res.statusCode = 400;
+            return res.end(JSON.stringify(err));
+          }
+          res.statusCode = 200;
+          return res.end(JSON.stringify(status));
+        })
+      } else {
+        sparks.forEach(function(sparkID) {
+          var spark = primus.spark(sparkID);
+
+          if (spark) {
+            spark.write(data.msg);
+            called++;
+          }
+        });
+        res.statusCode = 200;
+        res.end('{ "ok": true, "send":'+ called +' }');
+      }
+    });
+  } else if (Array.isArray(data.sparks)) {
     data.sparks.forEach(function each(id) {
       var spark = primus.spark(id);
 
@@ -152,7 +214,8 @@ function parse(primus, raw, res) {
     });
   }
 
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
-  res.end('{ "ok": true, "send":'+ called +' }');
+  if (!callingRooms) {
+    res.statusCode = 200;
+    res.end('{ "ok": true, "send":'+ called +' }');
+  }
 }
