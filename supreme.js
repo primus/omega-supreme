@@ -64,7 +64,8 @@ supreme.server = function server(primus, options) {
 
     var type = 'broadcast'
       , calls = 0
-      , spark;
+      , spark
+      , local = false;
 
     if ('function' === typeof sparks) {
       fn = sparks;
@@ -88,6 +89,10 @@ supreme.server = function server(primus, options) {
         return !spark;
       });
 
+      //
+      // if no more sparks are left, then we finished with just local sparks
+      //
+      local = !sparks.length;
       type = 'sparks';
     } else if (sparks) {
       spark = primus.spark(sparks);
@@ -95,6 +100,10 @@ supreme.server = function server(primus, options) {
       if (spark) {
         spark.write(msg);
         sparks = '';
+        //
+        // just one local spark was given
+        //
+        local = true;
         calls++;
       }
 
@@ -104,13 +113,18 @@ supreme.server = function server(primus, options) {
         spark.write(msg);
         calls++;
       });
+      //
+      // since there are no sparks, having no servers means
+      // *local* broadcast only
+      //
+      local = !servers.length;
     }
 
     //
     // Everything was broad casted locally, we can bail out early, which is
     // naaaais <-- say out loud with Borat's voice.
     //
-    if (type !== 'broadcast' && !sparks.length) return fn(undefined, {
+    if (local) return fn(undefined, {
       ok: true,
       send: calls,
       local: true
