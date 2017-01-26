@@ -63,9 +63,9 @@ supreme.server = function server(primus, options) {
     servers = (!Array.isArray(servers) ? [servers] : servers).filter(Boolean);
 
     var type = 'broadcast'
+      , local = false
       , calls = 0
-      , spark
-      , local = false;
+      , spark;
 
     if ('function' === typeof sparks) {
       fn = sparks;
@@ -90,7 +90,7 @@ supreme.server = function server(primus, options) {
       });
 
       //
-      // if no more sparks are left, then we finished with just local sparks
+      // If no more sparks are left, then we finished with just local sparks.
       //
       local = !sparks.length;
       type = 'sparks';
@@ -101,7 +101,7 @@ supreme.server = function server(primus, options) {
         spark.write(msg);
         sparks = '';
         //
-        // just one local spark was given
+        // Just one local spark was given.
         //
         local = true;
         calls++;
@@ -114,8 +114,8 @@ supreme.server = function server(primus, options) {
         calls++;
       });
       //
-      // since there are no sparks, having no servers means
-      // *local* broadcast only
+      // Since there are no sparks, having no servers means *local* broadcast
+      // only.
       //
       local = !servers.length;
     }
