@@ -35,7 +35,7 @@
     "assume": "~1.5.0",
     "binary-pack": "~1.0.2",
     "istanbul": "~0.4.5",
-    "mocha": "~3.3.0",
+    "mocha": "~3.4.0",
     "pre-commit": "~1.2.0",
     "primus": "~7.0.0",
     "ws": "~2.3.0"
