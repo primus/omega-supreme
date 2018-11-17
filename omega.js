@@ -21,9 +21,8 @@ module.exports = function omega(options) {
   // Compile an identical header as we expect to be send from the client so we
   // can easily validate the request.
   //
-  var authorization = 'Basic '+ (
-    new Buffer(options.username +':'+ options.password)
-  ).toString('base64');
+  var authorization = 'Basic '+
+    Buffer.from(options.username +':'+ options.password).toString('base64');
 
   //
   // Create an URL that we can test against.
