@@ -27,17 +27,17 @@
   },
   "homepage": "https://github.com/primus/omega-supreme",
   "dependencies": {
-    "async": "~3.2.0",
-    "request": "~2.88.0",
-    "routable": "~0.0.5"
+    "async": "^3.2.0",
+    "request": "^2.88.0",
+    "routable": "0.0.5"
   },
   "devDependencies": {
-    "assume": "~2.2.0",
-    "binary-pack": "~1.0.2",
-    "istanbul": "~0.4.5",
-    "mocha": "~7.2.0",
-    "pre-commit": "~1.2.0",
-    "primus": "~7.3.0",
-    "ws": "~7.3.0"
+    "assume": "^2.2.0",
+    "binary-pack": "^1.0.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^7.2.0",
+    "pre-commit": "^1.2.0",
+    "primus": "^7.3.0",
+    "ws": "^7.3.0"
   }
 }
