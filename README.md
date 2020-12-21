@@ -1,6 +1,6 @@
 # Omega Supreme
 
-[![Version npm](https://img.shields.io/npm/v/omega-supreme.svg?style=flat-square)](http://browsenpm.org/package/omega-supreme)[![Build Status](https://img.shields.io/travis/primus/omega-supreme/master.svg?style=flat-square)](https://travis-ci.org/primus/omega-supreme)[![Dependencies](https://img.shields.io/david/primus/omega-supreme.svg?style=flat-square)](https://david-dm.org/primus/omega-supreme)[![Coverage Status](https://img.shields.io/coveralls/primus/omega-supreme/master.svg?style=flat-square)](https://coveralls.io/r/primus/omega-supreme?branch=master)[![IRC channel](https://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](https://webchat.freenode.net/?channels=primus)
+[![Version npm](https://img.shields.io/npm/v/omega-supreme.svg?style=flat-square)](http://browsenpm.org/package/omega-supreme)[![Build Status](https://img.shields.io/github/workflow/status/lpinca/omega-supreme/CI/master?label=CI)](https://github.com/lpinca/omega-supreme/actions?query=workflow%3ACI+branch%3Amaster)[![Dependencies](https://img.shields.io/david/primus/omega-supreme.svg?style=flat-square)](https://david-dm.org/primus/omega-supreme)[![Coverage Status](https://img.shields.io/coveralls/primus/omega-supreme/master.svg?style=flat-square)](https://coveralls.io/r/primus/omega-supreme?branch=master)[![IRC channel](https://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](https://webchat.freenode.net/?channels=primus)
 
 Known for his great strength and greater courage, Omega Supreme is the Autobots’
 last line of defense against the Decepticons. He will stand unwaveringly against
@@ -14,11 +14,11 @@ broadcast a message with a single request and can distribute messages to single
 sparks. In place of his left hand, he is armed with authentication which can
 pulverize any attacker.
 
-Or in plain English, `omega-supreme` allows you to broadcast messages to
-Primus using a regular HTTP request. These messages can be broadcasted to every
-single connection on the server, a single spark or an array of sparks. This
-allows other languages to easily write messages to your server without the need
-of creating a complex architecture.
+Or in plain English, `omega-supreme` allows you to broadcast messages to Primus
+using a regular HTTP request. These messages can be broadcasted to every single
+connection on the server, a single spark or an array of sparks. This allows
+other languages to easily write messages to your server without the need of
+creating a complex architecture.
 
 ## Installation
 
@@ -28,19 +28,19 @@ npm install --save omega-supreme
 
 ## Adding Omega Supreme to Primus
 
-Omega Supreme should be added as a **plugin** in Primus. The plugin will also add
-a `omega-supreme` middleware which will intercept the incoming HTTP requests and
-will take care of the actual distribution of the message to every single connected
-client. Adding plugins in Primus is done using the `.plugin(name, plugin)` method.
-The options for the plugin can directly be added to the constructor of your Primus
-server so all the configuration of the server and the plugins is in one central
-location as illustrated in the example below:
+Omega Supreme should be added as a **plugin** in Primus. The plugin will also
+add a `omega-supreme` middleware which will intercept the incoming HTTP requests
+and will take care of the actual distribution of the message to every single
+connected client. Adding plugins in Primus is done using the
+`.plugin(name, plugin)` method. The options for the plugin can directly be added
+to the constructor of your Primus server so all the configuration of the server
+and the plugins is in one central location as illustrated in the example below:
 
 ```js
 'use strict';
 
-var Primus = require('primus')
-  , server = require('http').createServer();
+var Primus = require('primus'),
+  server = require('http').createServer();
 
 var primus = new Primus(server, {
   /* Add the options here, in the Primus's options */
@@ -60,7 +60,8 @@ information to bradcast. The following options can be configured:
 - **password**: Password for basic authorization, defaults to `supreme`.
 - **username**: Username for basic authorization, defaults to `omega`.
 - **url**: Access path, defaults to `/primus/omega/supreme`.
-- **concurrently**: How many servers can we broadcast to at once, defaults to `10`.
+- **concurrently**: How many servers can we broadcast to at once, defaults to
+  `10`.
 
 ### Messaging
 
@@ -104,38 +105,48 @@ primus.forward(server, msg, [sparks], fn);
 ```
 
 In order to make the messaging even easier to use, `omega-supreme` adds a
-`primus.forward` method to your Primus server instance. It allows you to broadcast
-messages to the supplied server. It will only write the message to the supplied
-server if the supplied sparks are not on the current server.
+`primus.forward` method to your Primus server instance. It allows you to
+broadcast messages to the supplied server. It will only write the message to the
+supplied server if the supplied sparks are not on the current server.
 
 Sending a message to a spark on a different server:
 
 ```js
-primus.forward('http://localhost:8080', {
-  event: 'name'
-}, 'ad8a-280z-18', function (err, data) {
-  // data.send = 1 if it was successful.
-});
+primus.forward(
+  'http://localhost:8080',
+  {
+    event: 'name'
+  },
+  'ad8a-280z-18',
+  function (err, data) {
+    // data.send = 1 if it was successful.
+  }
+);
 ```
 
 Sending to a group of sparks:
 
 ```js
-primus.forward('http://localhost:8080', {
-  event: 'name'
-}, ['ad8a-280z-18', 'y97x-42480-13', /* more spark.id's */ ], function (err, data) {
-
-});
+primus.forward(
+  'http://localhost:8080',
+  {
+    event: 'name'
+  },
+  ['ad8a-280z-18', 'y97x-42480-13' /* more spark.id's */],
+  function (err, data) {}
+);
 ```
 
 Or just broadcasting by not supplying the optional sparks argument:
 
 ```js
-primus.forward('http://localhost:8080', {
-  event: 'name'
-}, function (err, data) {
-
-});
+primus.forward(
+  'http://localhost:8080',
+  {
+    event: 'name'
+  },
+  function (err, data) {}
+);
 ```
 
 In all the examples above, we've sent an `event` packet. If you're using
@@ -143,7 +154,7 @@ In all the examples above, we've sent an `event` packet. If you're using
 custom events you should use this format:
 
 ```js
-primus.forward('http://localhost:8080', { emit: [ eventName, ...args ] }, fn);
+primus.forward('http://localhost:8080', { emit: [eventName, ...args] }, fn);
 ```
 
 Keep in mind that you don't have to write event blobs, you can write anything
@@ -162,13 +173,13 @@ primus.options.middleware = middleware;
 
 where `middleware` is a function which takes the following arguments:
 
-Name                | Type     | Description
---------------------|----------|----------------------
-primus              | Object   | The Primus server instance
-parse               | Function | The default parsing function has the following signature `parse(primus, buff, res)` where buff is the raw request body
-req                 | Object   | The HTTP request
-res                 | Object   | The HTTP response
-next                | Function | The next callback
+| Name   | Type     | Description                                                                                                            |
+| ------ | -------- | ---------------------------------------------------------------------------------------------------------------------- |
+| primus | Object   | The Primus server instance                                                                                             |
+| parse  | Function | The default parsing function has the following signature `parse(primus, buff, res)` where buff is the raw request body |
+| req    | Object   | The HTTP request                                                                                                       |
+| res    | Object   | The HTTP response                                                                                                      |
+| next   | Function | The next callback                                                                                                      |
 
 ### Example
 
@@ -181,11 +192,13 @@ function middleware(primus, parse, req, res, next) {
   res.setHeader('omegamiddleware', 'true');
 
   req.setEncoding('utf8');
-  req.on('data', function data(chunk) {
-    raw += chunk;
-  }).on('end', function end() {
-    parse(primus, raw, res);
-  });
+  req
+    .on('data', function data(chunk) {
+      raw += chunk;
+    })
+    .on('end', function end() {
+      parse(primus, raw, res);
+    });
 }
 ```
 
@@ -198,7 +211,8 @@ function middleware(primus, parse, req, res, next) {
 [![Dependencies](https://img.shields.io/david/fadeenk/omega-supreme-rooms-middleware.svg?style=flat-square)](https://david-dm.org/fadeenk/omega-supreme-rooms-middleware)
 [![Coverage Status](https://img.shields.io/coveralls/fadeenk/omega-supreme-rooms-middleware/master.svg?style=flat-square)](https://coveralls.io/r/fadeenk/omega-supreme-rooms-middleware?branch=master)
 
-This middleware adds support for `primus-rooms` and automatically integrates with `metroplex` if included.
+This middleware adds support for `primus-rooms` and automatically integrates
+with `metroplex` if included.
 
 ## License
 
