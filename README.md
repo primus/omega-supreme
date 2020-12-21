@@ -1,6 +1,6 @@
 # Omega Supreme
 
-[![Version npm](https://img.shields.io/npm/v/omega-supreme.svg?style=flat-square)](http://browsenpm.org/package/omega-supreme)[![Build Status](https://img.shields.io/github/workflow/status/lpinca/omega-supreme/CI/master?label=CI)](https://github.com/lpinca/omega-supreme/actions?query=workflow%3ACI+branch%3Amaster)[![Dependencies](https://img.shields.io/david/primus/omega-supreme.svg?style=flat-square)](https://david-dm.org/primus/omega-supreme)[![Coverage Status](https://img.shields.io/coveralls/primus/omega-supreme/master.svg?style=flat-square)](https://coveralls.io/r/primus/omega-supreme?branch=master)[![IRC channel](https://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](https://webchat.freenode.net/?channels=primus)
+[![Version npm](https://img.shields.io/npm/v/omega-supreme.svg?style=flat-square)](https://www.npmjs.com/package/omega-supreme)[![Build Status](https://img.shields.io/github/workflow/status/primus/omega-supreme/CI/master?label=CI&style=flat-square)](https://github.com/primus/omega-supreme/actions?query=workflow%3ACI+branch%3Amaster)[![Dependencies](https://img.shields.io/david/primus/omega-supreme.svg?style=flat-square)](https://david-dm.org/primus/omega-supreme)[![Coverage Status](https://img.shields.io/coveralls/primus/omega-supreme/master.svg?style=flat-square)](https://coveralls.io/r/primus/omega-supreme?branch=master)[![IRC channel](https://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](https://webchat.freenode.net/?channels=primus)
 
 Known for his great strength and greater courage, Omega Supreme is the Autobots’
 last line of defense against the Decepticons. He will stand unwaveringly against
@@ -22,7 +22,7 @@ creating a complex architecture.
 
 ## Installation
 
-```js
+```
 npm install --save omega-supreme
 ```
 
@@ -206,7 +206,7 @@ function middleware(primus, parse, req, res, next) {
 
 #### [Omega Supreme Rooms Middleware](https://github.com/fadeenk/omega-supreme-rooms-middleware)
 
-[![Version npm](https://img.shields.io/npm/v/omega-supreme-rooms-middleware.svg?style=flat-square)](http://browsenpm.org/package/omega-supreme-rooms-middleware)
+[![Version npm](https://img.shields.io/npm/v/omega-supreme-rooms-middleware.svg?style=flat-square)](https://www.npmjs.com/package/omega-supreme-rooms-middleware)
 [![Build Status](https://img.shields.io/travis/fadeenk/omega-supreme-rooms-middleware/master.svg?style=flat-square)](https://travis-ci.org/fadeenk/omega-supreme-rooms-middleware)
 [![Dependencies](https://img.shields.io/david/fadeenk/omega-supreme-rooms-middleware.svg?style=flat-square)](https://david-dm.org/fadeenk/omega-supreme-rooms-middleware)
 [![Coverage Status](https://img.shields.io/coveralls/fadeenk/omega-supreme-rooms-middleware/master.svg?style=flat-square)](https://coveralls.io/r/fadeenk/omega-supreme-rooms-middleware?branch=master)
