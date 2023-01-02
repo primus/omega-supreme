@@ -1,6 +1,6 @@
 # Omega Supreme
 
-[![Version npm](https://img.shields.io/npm/v/omega-supreme.svg?style=flat-square)](https://www.npmjs.com/package/omega-supreme)[![Build Status](https://img.shields.io/github/workflow/status/primus/omega-supreme/CI/master?label=CI&style=flat-square)](https://github.com/primus/omega-supreme/actions?query=workflow%3ACI+branch%3Amaster)[![Coverage Status](https://img.shields.io/coveralls/primus/omega-supreme/master.svg?style=flat-square)](https://coveralls.io/r/primus/omega-supreme?branch=master)
+[![Version npm](https://img.shields.io/npm/v/omega-supreme.svg?style=flat-square)](https://www.npmjs.com/package/omega-supreme)[![CI](https://img.shields.io/github/actions/workflow/status/primus/omega-supreme/ci.yml?branch=master&label=CI&style=flat-square)](https://github.com/primus/omega-supreme/actions?query=workflow%3ACI+branch%3Amaster)[![Coverage Status](https://img.shields.io/coveralls/primus/omega-supreme/master.svg?style=flat-square)](https://coveralls.io/r/primus/omega-supreme?branch=master)
 
 Known for his great strength and greater courage, Omega Supreme is the Autobots’
 last line of defense against the Decepticons. He will stand unwaveringly against
